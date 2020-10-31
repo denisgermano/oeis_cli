@@ -21,7 +21,7 @@ def setup_params(numbers):
 
 
 def parse_content(content):
-    tree = html.fromstring(response.content)
+    tree = html.fromstring(content)
 
     # Sequence name at xpath:
     # //html/body/center[2]/table/tbody/tr/td/table[X]/tbody/tr[3]/td/table/tbody/tr/td[3]
