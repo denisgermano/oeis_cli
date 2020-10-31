@@ -9,9 +9,7 @@ from lxml import html
 SEARCH_URL = "https://oeis.org/search?q={}&sort=&language=english&go=Search"
 
 
-@click.command()
-@click.argument("numbers", required=True, nargs=-1, type=int)
-def cli(numbers):
+def setup_params(numbers):
     numbers = [str(num) for num in numbers]
     query = " ".join(numbers)
     query = urllib.parse.quote_plus(query)
@@ -19,6 +17,13 @@ def cli(numbers):
     headers = {
         "Content-Type": "text/html",
     }
+    return url, headers
+
+@click.command()
+@click.argument("numbers", required=True, nargs=-1, type=int)
+def cli(numbers):
+    url, headers = setup_params(numbers)
+
     try:
         print("fetching oeis website...")
         response = requests.get(url, headers=headers)
