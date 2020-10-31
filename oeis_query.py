@@ -19,19 +19,8 @@ def setup_params(numbers):
     }
     return url, headers
 
-@click.command()
-@click.argument("numbers", required=True, nargs=-1, type=int)
-def cli(numbers):
-    url, headers = setup_params(numbers)
 
-    try:
-        print("fetching oeis website...")
-        response = requests.get(url, headers=headers)
-    except requests.exceptions.RequestException as e:
-        print("Failure trying to access OEIS website")
-        print("Try again in a few minutes")
-        raise SystemExit(e)
-
+def parse_content(content):
     tree = html.fromstring(response.content)
 
     # Sequence name at xpath:
@@ -48,3 +37,20 @@ def cli(numbers):
             break
         sequence = tables[i].xpath("tr[3]/td/table[1]/tr/td[3]")[0].text
         print(i, "-", sequence.strip())
+
+
+
+@click.command()
+@click.argument("numbers", required=True, nargs=-1, type=int)
+def cli(numbers):
+    url, headers = setup_params(numbers)
+
+    try:
+        print("fetching oeis website...")
+        response = requests.get(url, headers=headers)
+    except requests.exceptions.RequestException as e:
+        print("Failure trying to access OEIS website")
+        print("Try again in a few minutes")
+        raise SystemExit(e)
+
+    parse_content(response.content)
